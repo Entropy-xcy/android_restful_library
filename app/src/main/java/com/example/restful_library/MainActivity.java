@@ -2,13 +2,16 @@ package com.example.restful_library;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Security;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,10 +22,10 @@ import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity {
     TextView textView;
-    Restful r;
+    CloudBciClient client;
 
-    public void onClick(View view) throws InterruptedException {
-        textView.setText("Response:" + r.getResponse());
+    public void onClick(View view){
+        textView.setText(client.requestQueue.get(0).response);
     }
 
     @Override
@@ -30,15 +33,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RequestQueue queue = Volley.newRequestQueue(this);
         String url ="http://cloud-bci.duckdns.org";
 
         textView = (TextView) findViewById(R.id.text);
-        r = new Restful(this);
-        r.setBaseUrl(url);
-        r.setFunction("upload_data");
-        String[][] parameters = {{"a", "1"},{"b", "2"}};
-        r.setParameters(parameters);
-        r.access();
+
+        DummySignal d = new DummySignal();
+        d.start();
+        Log.d("Main", "Signal Started");
     }
 }
