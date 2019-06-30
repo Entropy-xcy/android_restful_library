@@ -18,7 +18,7 @@ public class CloudBciClient extends Thread{
     OkHttpClient client;
     final static int accessingPeriod = 20;
     List<GetRequest> requestQueue;
-    String dataBuffer = "";
+    String[] dataBuffer = {"", "", "", ""};
 
     public CloudBciClient(String baseUrl)
     {
@@ -48,23 +48,27 @@ public class CloudBciClient extends Thread{
         }
     }
 
-    public void insert_real_time_data(String data)
+    public void insert_real_time_data(int channel, String data)
     {
-        if(dataBuffer.equals(""))
+        if(dataBuffer[channel-1].equals(""))
         {
-            dataBuffer = data;
+            dataBuffer[channel-1] = data;
         }
         else {
-            dataBuffer = dataBuffer + ";" + data;
+            dataBuffer[channel-1] = dataBuffer[channel-1] + ";" + data;
         }
     }
 
     private void dataQueueToRequest(){
-        if(!dataBuffer.equals("")) {
-            String url = baseUrl + "/insert_real_time_data?case_id=1&attribute=data&data=" + dataBuffer;
-            Log.d("url", url);
-            addRawRequest(url);
-            dataBuffer = "";
+        for(int i = 0; i < dataBuffer.length; i++) {
+            if (!dataBuffer[i].equals("")) {
+                int attribute_index = i + 1;
+                String url = baseUrl + "/insert_real_time_data?case_id=1&attribute=data" +
+                                attribute_index + "&data=" + dataBuffer[i];
+                Log.d("url", url);
+                addRawRequest(url);
+                dataBuffer[i] = "";
+            }
         }
     }
 
