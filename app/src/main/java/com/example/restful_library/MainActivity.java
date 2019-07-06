@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String url ="http://cloud-bci.duckdns.org";
+        String url ="http://cloud-bci.duckdns.org:8000";
 
         textView = (TextView) findViewById(R.id.text);
 
